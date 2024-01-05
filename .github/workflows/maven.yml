@@ -12,9 +12,9 @@ jobs:
 
     steps:
       - uses: action/checkout@v4
-#        with:
-#          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
-#          repository: ngnsr/library.git
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
 #      - name: Set up JDK 17
 #        uses: action/setup-java@v1
 #        with:
