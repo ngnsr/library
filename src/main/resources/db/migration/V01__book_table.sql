@@ -1,8 +1,8 @@
 CREATE TABLE book (
-  id bigint primary key auto_increment ,
+  id bigserial NOT NULL ,
   name varchar(255) NOT NULL ,
   author varchar(255) NOT NULL ,
-  description text NOT NULL ,
+  description text ,
   publisher varchar(255) NOT NULL ,
   isbn varchar(25) NOT NULL ,
   release_year int NOT NULL
