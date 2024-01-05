@@ -1,16 +1,15 @@
 package com.ridenrite.library;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,8 +17,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers
 @SpringBootTest
@@ -34,7 +32,7 @@ class BookControllerTest {
 
     @Test
     void createBook() throws Exception {
-        Book testBook = getTestBook();
+        BookDto testBook = getTestBookDto();
 
         String testBookJson = objectMapper.writeValueAsString(testBook);
         MvcResult mvcResult = mockMvc.perform(post("/book")
@@ -57,7 +55,7 @@ class BookControllerTest {
 
     @Test
     void findBook() throws Exception {
-        Book testBook = getTestBook();
+        BookDto testBook = getTestBookDto();
         String testBookJson = objectMapper.writeValueAsString(testBook);
         mockMvc.perform(post("/book")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,17 +78,52 @@ class BookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));
+    }
 
+
+    @Test
+    void createBookValidation() throws Exception {
+        BookDto testBookDto = getTestBookDto();
+        testBookDto.setName(null);
+        testBookDto.setAuthor("");
+
+        String testBookJson = objectMapper.writeValueAsString(testBookDto);
+        mockMvc.perform(post("/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(testBookJson))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", containsInAnyOrder("author is mandatory", "name is mandatory")));
+
+        testBookDto = getTestBookDto();
+        testBookDto.setISBN("wrong isbn");
+        testBookJson = objectMapper.writeValueAsString(testBookDto);
+
+        mockMvc.perform(post("/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(testBookJson))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", containsInAnyOrder("ISBN must match \"^(?:ISBN(?:-13)?:?\\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\\ ]){4})[-\\ 0-9]{17}$)97[89][-\\ ]?[0-9]{1,5}[-\\ ]?[0-9]+[-\\ ]?[0-9]+[-\\ ]?[0-9]$\"")));
+    }
+
+    @Test
+    void getNotExistingId() throws Exception {
+        mockMvc.perform(get("/book/123"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status", equalTo(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.errors", containsInAnyOrder("Book not found")));
     }
 
     @NotNull
-    private static Book getTestBook() {
-        Book testBook = new Book();
+    private static BookDto getTestBookDto() {
+        BookDto testBook = new BookDto();
         testBook.setName("Test name");
         testBook.setAuthor("Test author");
         testBook.setDescription("Test description");
         testBook.setPublisher("Test publisher");
-        testBook.setISBN("Test isbn");
+        testBook.setISBN("978-1-56619-909-4");
         testBook.setReleaseYear(2000);
         return testBook;
     }

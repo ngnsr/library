@@ -1,5 +1,6 @@
 package com.ridenrite.library;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +31,13 @@ public class BookController {
 
     @PostMapping("/book")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Book createBook(@RequestBody Book book){
-        return bookService.create(book);
+    public Book createBook(@Valid @RequestBody BookDto dto){
+        return bookService.create(dto);
     }
 
     @PutMapping("/book/{id}")
-    public Book editBook(@PathVariable Long id, @RequestBody Book book){
-        return bookService.update(id, book);
+    public Book editBook(@PathVariable Long id, @RequestBody BookDto dto){
+        return bookService.update(id, dto);
     }
 
     @DeleteMapping("/book/{id}")
