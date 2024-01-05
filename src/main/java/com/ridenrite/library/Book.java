@@ -1,12 +1,29 @@
 package com.ridenrite.library;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String author;
     private String description;
     private String publisher;
     private String ISBN;
-    private int year;
+    private int releaseYear;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -48,11 +65,11 @@ public class Book {
         this.ISBN = ISBN;
     }
 
-    public int getYear() {
-        return year;
+    public int getReleaseYear() {
+        return releaseYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setReleaseYear(int year) {
+        this.releaseYear = year;
     }
 }
