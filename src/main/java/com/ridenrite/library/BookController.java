@@ -3,6 +3,7 @@ package com.ridenrite.library;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,7 @@ public class BookController {
     }
 
     @PostMapping("/book")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public Book createBook(@RequestBody Book book){
         return bookService.create(book);
     }
