@@ -16,9 +16,14 @@ jobs:
 
     steps:
       - uses: action/checkout@v4
+        with:
+          repository: 'ngnsr/library'
+          ssh-key: ${{ secrets.private_ssh_key }}
+
       - uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
+          ssh-key: ${{ secrets.private_ssh_key }}
+
 #      - name: Set up JDK 17
 #        uses: action/setup-java@v1
 #        with:
