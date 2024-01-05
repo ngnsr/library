@@ -5,6 +5,10 @@ on:
     branches-ignore:
       - 'main'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   test:
     name: Unit Test
