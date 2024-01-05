@@ -12,11 +12,14 @@ jobs:
 
     steps:
       - uses: action/checkout@v2
-      - name: Set up JDK 17
-        uses: action/setup-java@v1
         with:
-          java-version: 17.0.9
-      - name: Maven package
-        run: mvn -B clean package -DskipTests
-      - name: Maven verify
-        run: mvn -B clean verify
+          ssh-key: ${{ secrets.PRIVATE_SSH_KEY }}
+          repository: ngnsr/library
+#      - name: Set up JDK 17
+#        uses: action/setup-java@v1
+#        with:
+#          java-version: 17.0.9
+#      - name: Maven package
+#        run: mvn -B clean package -DskipTests
+#      - name: Maven verify
+#        run: mvn -B clean verify
