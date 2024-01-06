@@ -1,5 +1,8 @@
 package com.ridenrite.library;
 
+import com.ridenrite.library.exception.ConflictException;
+import com.ridenrite.library.exception.NotFoundException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,9 +21,9 @@ import java.util.Map;
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatusCode status,
-                                                                  WebRequest request) {
+                                                                  @NotNull HttpHeaders headers,
+                                                                  @NotNull HttpStatusCode status,
+                                                                  @NotNull WebRequest request) {
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .toList();
@@ -42,4 +45,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Object> handleConflictException(ConflictException ex){
+        Map<String, Object> body = Map.of(
+                "timestamp", new Date(),
+                "status", HttpStatus.CONFLICT,
+                "errors", List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
 }

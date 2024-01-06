@@ -1,4 +1,4 @@
-package com.ridenrite.library;
+package com.ridenrite.library.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

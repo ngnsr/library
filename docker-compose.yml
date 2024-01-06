@@ -8,5 +8,5 @@ services:
     environment:
       POSTGRES_USER: dev-user
       POSTGRES_PASSWORD: dev-password
-      POSTGGRES_DB: test
+      POSTGRES_DB: test
       POSTGRES_ADMIN_PASSWORD: dev-admin-password
