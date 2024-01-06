@@ -1,16 +1,13 @@
-package com.ridenrite.library;
+package com.ridenrite.library.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ridenrite.library.AbstractController;
+import com.ridenrite.library.dto.BookDto;
+import com.ridenrite.library.entity.Book;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -19,16 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Testcontainers
-@SpringBootTest
-@AutoConfigureMockMvc
-class BookControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+class BookControllerTest extends AbstractController {
 
     @Test
     void createBook() throws Exception {
@@ -93,7 +81,8 @@ class BookControllerTest {
                         .content(testBookJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", containsInAnyOrder("author is mandatory", "name is mandatory")));
+                .andExpect(jsonPath("$.errors",
+                        containsInAnyOrder("author is mandatory", "name is mandatory")));
 
         testBookDto = getTestBookDto();
         testBookDto.setISBN("wrong isbn");
@@ -104,7 +93,8 @@ class BookControllerTest {
                         .content(testBookJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", containsInAnyOrder("ISBN must match \"^(?:ISBN(?:-13)?:?\\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\\ ]){4})[-\\ 0-9]{17}$)97[89][-\\ ]?[0-9]{1,5}[-\\ ]?[0-9]+[-\\ ]?[0-9]+[-\\ ]?[0-9]$\"")));
+                .andExpect(jsonPath("$.errors",
+                        containsInAnyOrder("ISBN must match \"^(?:ISBN(?:-13)?:?\\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\\ ]){4})[-\\ 0-9]{17}$)97[89][-\\ ]?[0-9]{1,5}[-\\ ]?[0-9]+[-\\ ]?[0-9]+[-\\ ]?[0-9]$\"")));
     }
 
     @Test

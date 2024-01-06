@@ -1,5 +1,8 @@
-package com.ridenrite.library;
+package com.ridenrite.library.controller;
 
+import com.ridenrite.library.service.BookService;
+import com.ridenrite.library.dto.BookDto;
+import com.ridenrite.library.entity.Book;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +39,7 @@ public class BookController {
     }
 
     @PutMapping("/book/{id}")
-    public Book editBook(@PathVariable Long id, @RequestBody BookDto dto){
+    public Book editBook(@PathVariable Long id, @Valid @RequestBody BookDto dto){
         return bookService.update(id, dto);
     }
 
@@ -44,5 +47,4 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);
     }
-
 }

@@ -1,5 +1,6 @@
-package com.ridenrite.library;
+package com.ridenrite.library.entity;
 
+import com.ridenrite.library.dto.BookDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -1,10 +1,12 @@
-package com.ridenrite.library;
+package com.ridenrite.library.service;
 
+import com.ridenrite.library.dto.BookDto;
+import com.ridenrite.library.entity.Book;
+import com.ridenrite.library.exception.NotFoundException;
+import com.ridenrite.library.repository.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -15,11 +17,8 @@ public class BookService {
     }
 
     public Book get(Long id){
-        Optional<Book> book = bookRepository.findById(id);
-        if(book.isPresent()) {
-            return book.get();
-        }
-        throw new NotFoundException("Book not found");
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
     public Page<Book> getAll(String query, Pageable pageable){
