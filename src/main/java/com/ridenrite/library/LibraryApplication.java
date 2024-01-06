@@ -9,4 +9,12 @@ public class LibraryApplication {
     public static void main(String[] args) {
         SpringApplication.run(LibraryApplication.class, args);
     }
+
+//    @Bean
+//    public FlywayMigrationStrategy cleanMigrateStrategy() {
+//        return flyway -> {
+//            flyway.repair();
+//            flyway.migrate();
+//        };
+//    }
 }

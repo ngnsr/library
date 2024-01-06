@@ -1,5 +1,6 @@
-package com.ridenrite.library;
+package com.ridenrite.library.repository;
 
+import com.ridenrite.library.entity.Book;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
